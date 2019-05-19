@@ -6,7 +6,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
 
 
 @DynamoDBTable(tableName = "Url")
-class ShortUrl {
+public class ShortUrl {
     @get:DynamoDBHashKey
     var shortUrl: String? = null
     @get:DynamoDBAttribute

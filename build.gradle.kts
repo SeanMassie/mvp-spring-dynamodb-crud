@@ -15,8 +15,6 @@ repositories {
 	mavenCentral()
 }
 
-
-
 dependencies {
 	implementation("com.github.derjust:spring-data-dynamodb:5.1.0")
 	implementation("com.amazonaws:aws-java-sdk-dynamodb:1.11.34")
