@@ -9,32 +9,27 @@ import com.amazonaws.services.dynamodbv2.model.*
 import com.amazonaws.util.StringUtils
 import org.slf4j.LoggerFactory
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories
-import org.springframework.context.annotation.Configuration
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
-
+import org.springframework.context.annotation.Configuration
 
 @Configuration
+@ConfigurationProperties("amazon.aws")
 @EnableDynamoDBRepositories(basePackageClasses = [UrlRepository::class])
-class DynamoProperties {
+class DynamoConfig {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    @Value("\${amazon.dynamodb.endpoint}")
-    private val amazonDynamoDBEndpoint: String? = null
-
-    @Value("\${amazon.aws.accesskey}")
-    private val amazonAWSAccessKey: String? = null
-
-    @Value("\${amazon.aws.secretkey}")
-    private val amazonAWSSecretKey: String? = null
+    lateinit var endpoint:String
+    lateinit var accessKey:String
+    lateinit var secretKey:String
 
     @Bean
     fun amazonDynamoDB(): AmazonDynamoDB {
         val amazonDynamoDB = AmazonDynamoDBClient(amazonAWSCredentials())
 
-        if (!StringUtils.isNullOrEmpty(amazonDynamoDBEndpoint)) {
-            amazonDynamoDB.setEndpoint(amazonDynamoDBEndpoint)
+        if (!StringUtils.isNullOrEmpty(this.endpoint)) {
+            amazonDynamoDB.setEndpoint(this.endpoint)
         }
 
         val tableRequest = DynamoDBMapper(amazonDynamoDB)
@@ -54,7 +49,6 @@ class DynamoProperties {
 
     @Bean
     fun amazonAWSCredentials(): AWSCredentials {
-        return BasicAWSCredentials(
-                amazonAWSAccessKey!!, amazonAWSSecretKey!!)
+        return BasicAWSCredentials(this.accessKey, this.secretKey)
     }
 }
